@@ -1,0 +1,141 @@
+:root {
+	/** CSS DARK THEME PRIMARY COLORS */
+	--color-primary-100: #ffc105;
+	--color-primary-200: #ffc83b;
+	--color-primary-300: #ffcd57;
+	--color-primary-400: #ffd572;
+	--color-primary-500: #ffdc8a;
+	--color-primary-600: #ffe3a2;
+
+	/** CSS DARK THEME MIXED SURFACE COLORS */
+	--color-surface-mixed-100: #272116;
+	--color-surface-mixed-200: #3c362a;
+	--color-surface-mixed-300: #514c42;
+	--color-surface-mixed-400: #68635a;
+	--color-surface-mixed-500: #7f7b73;
+	--color-surface-mixed-600: #c0bbb4;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: var(--color-surface-mixed-100);
+	color: white;
+}
+
+#pattern-container {
+	display: flex;
+	flex-wrap: wrap;
+
+	background-color: var(--color-surface-mixed-200);
+	justify-content: center;
+	align-items: center;
+
+	max-width: min(80vw, 1200px);
+	min-height: 250px;
+	padding: 20px;
+	margin: 30px auto;
+
+	gap: 40px;
+	border-radius: 20px;
+}
+
+.pattern {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	background-color: var(--color-surface-mixed-300);
+
+	gap: 10px;
+	padding: 15px;
+	border-radius: 15px;
+}
+
+.cell {
+	background-color: var(--color-surface-mixed-400);
+	display: inline-block;
+	cursor: pointer;
+
+	border: none;
+	border-radius: 4px;
+
+	min-width: 30px;
+	max-width: 30px;
+
+	min-height: 30px;
+	max-height: 30px;
+}
+
+.cell.active {
+	background-color: var(--color-primary-200);
+}
+
+button.remove {
+	opacity: 0;
+	transition: opacity 0.4s ease;
+
+	position: absolute;
+	left: -25px;
+
+	font-size: 10px;
+	padding: 2px 7px;
+	background-color: rgb(175, 25, 23);
+	color: white;
+
+	outline: none;
+	border: none;
+	border-radius: 2px;
+
+	cursor: pointer;
+}
+
+.pattern:hover button.remove {
+	opacity: 1;
+}
+
+#result-char-container {
+	display: flex;
+	flex-wrap: wrap;
+
+	color: var(--color-primary-400);
+	background-color: var(--color-surface-mixed-300);
+
+	gap: 5px;
+	padding: 8px 10px;
+	font-size: 20px;
+	border-radius: 5px;
+
+	max-width: 90vw;
+}
+
+.result-char {
+	background-color: var(--color-surface-mixed-400);
+	padding: 2px;
+}
+
+.center-container {
+	display: flex;
+	flex-wrap: wrap;
+
+	justify-content: center;
+	align-items: center;
+
+	gap: 10px;
+	margin: 20px 0 40px;
+}
+
+button.high-importance {
+	background-color: var(--color-primary-200);
+	color: var(--color-surface-mixed-100);
+	text-transform: uppercase;
+
+	font-size: 18px;
+	padding: 10px 15px;
+	cursor: pointer;
+
+	border: none;
+	border-radius: 10px;
+}
