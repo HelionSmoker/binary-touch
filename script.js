@@ -58,7 +58,7 @@ class Pattern {
         PATTERN_CONTAINER.removeChild(this.patternNode);
         RESULT_CHAR_CONTAINER.removeChild(this.resultCharNode);
         if (PATTERN_CONTAINER.children.length === 0) {
-            addPattern();
+            new Pattern();
         }
     }
 }
@@ -69,23 +69,31 @@ function copy(text) {
         console.error("Could not copy text: ", err);
     });
 }
-let patterns = [];
-function addPattern() {
-    patterns.push(new Pattern());
+function changeColor(button) {
+    button.classList.add("highlight");
+    setTimeout(() => {
+        button.classList.remove("highlight");
+    }, 1000);
 }
-function copyResult() {
+function createPattern(button) {
+    new Pattern();
+    changeColor(button);
+}
+function copyResult(button) {
     const result = Array.from(RESULT_CHAR_CONTAINER.children)
         .map((charNode) => charNode.textContent)
         .join("");
     copy(result);
+    changeColor(button);
 }
-function resetPatterns() {
-    console.log(patterns);
-    patterns.forEach(pattern => pattern.remove());
-    patterns = [];
+function resetPatterns(button) {
+    PATTERN_CONTAINER.innerHTML = "";
+    RESULT_CHAR_CONTAINER.innerHTML = "";
+    new Pattern();
+    changeColor(button);
 }
 // TODO: find a way to add to 'window' without explicitly doing so
-window.addPattern = addPattern;
+window.createPattern = createPattern;
 window.copyResult = copyResult;
 window.resetPatterns = resetPatterns;
-addPattern();
+new Pattern();

@@ -131,11 +131,16 @@ button.high-importance {
 	background-color: var(--color-primary-200);
 	color: var(--color-surface-mixed-100);
 	text-transform: uppercase;
-
+	transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 	font-size: 18px;
 	padding: 10px 15px;
 	cursor: pointer;
 
 	border: none;
 	border-radius: 10px;
+}
+
+button.highlight {
+	background-color: var(--color-primary-500);
+	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

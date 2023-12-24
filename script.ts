@@ -83,7 +83,7 @@ class Pattern {
 		RESULT_CHAR_CONTAINER.removeChild(this.resultCharNode);
 
 		if (PATTERN_CONTAINER.children.length === 0) {
-			addPattern();
+			new Pattern();
 		}
 	}
 }
@@ -99,27 +99,38 @@ function copy(text: string) {
 	);
 }
 
-let patterns = [];
-
-function addPattern() {
-	patterns.push(new Pattern())
+function changeColor(button: HTMLButtonElement) {
+	button.classList.add("highlight");
+	setTimeout(() => {
+		button.classList.remove("highlight");
+	}, 1000);
 }
 
-function copyResult() {
+function createPattern(button: HTMLButtonElement) {
+	new Pattern();
+	changeColor(button);
+}
+
+function copyResult(button: HTMLButtonElement) {
 	const result = Array.from(RESULT_CHAR_CONTAINER.children)
 		.map((charNode) => charNode.textContent)
 		.join("");
+
 	copy(result);
+	changeColor(button);
 }
 
-function resetPatterns() {
-	patterns.forEach(pattern => pattern.remove());
-	patterns = [];
+function resetPatterns(button: HTMLButtonElement) {
+	PATTERN_CONTAINER.innerHTML = "";
+	RESULT_CHAR_CONTAINER.innerHTML = "";
+
+	new Pattern();
+	changeColor(button);
 }
 
 // TODO: find a way to add to 'window' without explicitly doing so
-(window as any).addPattern = addPattern;
+(window as any).createPattern = createPattern;
 (window as any).copyResult = copyResult;
 (window as any).resetPatterns = resetPatterns;
 
-addPattern();
+new Pattern();
