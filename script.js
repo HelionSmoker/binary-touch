@@ -69,8 +69,9 @@ function copy(text) {
         console.error("Could not copy text: ", err);
     });
 }
+let patterns = [];
 function addPattern() {
-    new Pattern();
+    patterns.push(new Pattern());
 }
 function copyResult() {
     const result = Array.from(RESULT_CHAR_CONTAINER.children)
@@ -78,6 +79,13 @@ function copyResult() {
         .join("");
     copy(result);
 }
+function resetPatterns() {
+    console.log(patterns);
+    patterns.forEach(pattern => pattern.remove());
+    patterns = [];
+}
+// TODO: find a way to add to 'window' without explicitly doing so
 window.addPattern = addPattern;
 window.copyResult = copyResult;
+window.resetPatterns = resetPatterns;
 addPattern();

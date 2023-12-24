@@ -99,8 +99,10 @@ function copy(text: string) {
 	);
 }
 
+let patterns = [];
+
 function addPattern() {
-	new Pattern();
+	patterns.push(new Pattern())
 }
 
 function copyResult() {
@@ -110,8 +112,14 @@ function copyResult() {
 	copy(result);
 }
 
+function resetPatterns() {
+	patterns.forEach(pattern => pattern.remove());
+	patterns = [];
+}
+
 // TODO: find a way to add to 'window' without explicitly doing so
 (window as any).addPattern = addPattern;
 (window as any).copyResult = copyResult;
+(window as any).resetPatterns = resetPatterns;
 
 addPattern();
