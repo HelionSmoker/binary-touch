@@ -6,22 +6,66 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+	<link rel="icon" type="image/x-icon" href="favicon.png">
 	<title>Document</title>
 </head>
 
 <body>
-	<div id="pattern-container"></div>
+	<nav class="center">
+		<a href="#" class="current">Editor</a>
+		<a href="#">Ascii</a>
+		<a href="#">Text</a>
+	</nav>
+	<main>
+		<div id="pattern-container"></div>
 
-	<div class="center-container">
-		<div id="result-char-container"></div>
-	</div>
+		<div class="center action-area">
+			<div class="gap-slider-helper">
+				<div id="symbols-container"></div>
+				<input type="range" id="gap-slider" min="-3" max="8" step="1" value="4">
+			</div>
+			<button class="copy-btn" onclick="copyResult(this)" title="Copy all the braille symbols">Copy</button>
+		</div>
 
-	<div class="center-container">
-		<button onclick="createPattern(this)" class="high-importance">NEW</button>
-		<button onclick="copyResult(this)" class="high-importance">Copy</button>
-		<button onclick="resetPatterns(this)" class="high-importance">Reset</button>
-	</div>
+		<hr>
+
+		<section class="center help-area">
+			<div class="help-content">
+				<h1 class="help-title">Overview</h1>
+				<p><b>BinaryTouch</b> enables you to quickly generate a desired sequence of
+					Braille symbols. To recreate a symbol, simply toggle all the corresponding cells in the interactive
+					panel.
+				</p>
+			</div>
+			<div class="help-content">
+				<h1 class="help-title">Utility</h1>
+				<ul>
+					<li><b>Art and Design:</b> create custom patterns that can be incorporated into
+						artwork or design projects.</li>
+					<li><b>Accessibility:</b> create symbols that can be printed out and used to
+						label objects or identify locations in a space.</li>
+					<li><b>
+							<pre class="help-braille-demo">⢹⠁⣟ ⡱⢎ ⢹⠁</pre> converters:
+						</b> make embossed printout using Braille symbols.</li>
+				</ul>
+			</div>
+			<div class="help-content">
+				<h1 class="help-title">Implementation</h1>
+				<p>Every Braille symbol corresponds to an 8-bit binary number, with 4 bits
+					allocated for the first column and 4 for the last. The converter translates between binary numbers
+					and Braille symbols, <i>where 1 signifies a dot, and 0 signifies its absence.</i>
+				</p>
+
+		</section>
+	</main>
+
+	<footer class="center">
+		<p>Check the project on</p>
+		<a href="https://github.com/HelionSmoker/brat-js" target="_blank" class="center logo-container">
+			<img src="github-mark-white.png" alt="GitHub Mark" class="logo">GitHub
+		</a>
+	</footer>
+	<i class="fas fa-rainbow"></i>
 	<script type="module" src="script.js"></script>
 </body>
 
