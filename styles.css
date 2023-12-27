@@ -19,11 +19,52 @@
 * {
 	margin: 0;
 	padding: 0;
+	outline: none;
+	border: none;
+	color: white;
+	text-decoration: none;
 }
 
 body {
 	background-color: var(--color-surface-mixed-100);
-	color: white;
+	min-width: 300px;
+
+	/* Needed for footer to hug the bottom of the screen */
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+nav {
+	display: flex;
+	width: 100%;
+	margin: 10px auto;
+	gap: 25px;
+	border-radius: 5px;
+}
+
+nav>a {
+	background-color: var(--color-surface-mixed-300);
+
+	font-size: 14px;
+	padding: 5px 15px;
+	margin: 10px 0 10px;
+	border-radius: 5px;
+}
+
+nav>.current {
+	text-decoration: underline;
+}
+
+main {
+	flex: 1;
+}
+
+.center {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
 
 #pattern-container {
@@ -34,10 +75,9 @@ body {
 	justify-content: center;
 	align-items: center;
 
-	max-width: min(80vw, 1200px);
-	min-height: 250px;
-	padding: 20px;
-	margin: 30px auto;
+	max-width: min(70vw, 1200px);
+	padding: 35px 30px;
+	margin: 30px auto 70px;
 
 	gap: 40px;
 	border-radius: 20px;
@@ -73,74 +113,179 @@ body {
 	background-color: var(--color-primary-200);
 }
 
-button.remove {
-	opacity: 0;
-	transition: opacity 0.4s ease;
-
-	position: absolute;
-	left: -25px;
-
-	font-size: 10px;
-	padding: 2px 7px;
-	background-color: rgb(175, 25, 23);
-	color: white;
-
-	outline: none;
-	border: none;
-	border-radius: 2px;
-
+button {
+	opacity: 0.8;
+	transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	cursor: pointer;
 }
 
-.pattern:hover button.remove {
+button:hover {
+	opacity: 1.0;
+}
+
+
+.pattern:hover .editor-btn {
 	opacity: 1;
 }
 
-#result-char-container {
-	display: flex;
-	flex-wrap: wrap;
+.remove-btn {
+	top: 10px;
 
-	color: var(--color-primary-400);
+	max-height: 16px;
+	min-height: 16px;
+
+	font-size: 10px;
+	background-color: rgb(175, 25, 23);
+	border-radius: 2px;
+}
+
+.add-btn {
+	top: 50%;
+	transform: translate(0, -50%);
+
+	max-height: 60px;
+	min-height: 60px;
+
 	background-color: var(--color-surface-mixed-300);
-
-	gap: 5px;
-	padding: 8px 10px;
-	font-size: 20px;
 	border-radius: 5px;
-
-	max-width: 90vw;
 }
 
-.result-char {
-	background-color: var(--color-surface-mixed-400);
-	padding: 2px;
+.editor-btn {
+	position: absolute;
+	right: -25px;
+
+	opacity: 0;
+	transition: opacity 0.4s ease;
+
+	max-width: 20px;
+	min-width: 20px;
 }
 
-.center-container {
-	display: flex;
-	flex-wrap: wrap;
+.copy-btn {
+	color: var(--color-surface-mixed-300);
+	background-color: var(--color-primary-100);
+	transition: background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 
-	justify-content: center;
-	align-items: center;
-
-	gap: 10px;
-	margin: 20px 0 40px;
-}
-
-button.high-importance {
-	background-color: var(--color-primary-200);
-	color: var(--color-surface-mixed-100);
-	text-transform: uppercase;
-	transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-	font-size: 18px;
-	padding: 10px 15px;
-	cursor: pointer;
-
-	border: none;
-	border-radius: 10px;
+	padding: 8px 12px;
+	border-radius: 5px;
 }
 
 button.highlight {
-	background-color: var(--color-primary-500);
-	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	color: var(--color-primary-100);
+	background-color: var(--color-surface-mixed-300);
+	transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-area {
+	position: relative;
+	gap: 15px;
+	margin-bottom: 50px;
+}
+
+#symbols-container {
+	display: flex;
+	flex-wrap: wrap;
+	background-color: var(--color-surface-mixed-200);
+
+	padding: 8px 10px;
+	font-size: 20px;
+	border-radius: 5px;
+	max-width: 90vw;
+}
+
+.symbol {
+	background-color: var(--color-surface-mixed-300);
+	color: var(--color-primary-400);
+}
+
+#gap-slider {
+	position: absolute;
+	bottom: -35px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: var(--color-surface-mixed-300);
+
+	/* Trial and error. Looks good, so I keep it */
+	transform: translate(-40%, 0);
+
+	opacity: 0;
+	transition: opacity 1.0s cubic-bezier(0.4, 0, 0.2, 1);
+
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+#gap-slider::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	background-color: var(--color-surface-mixed-500);
+
+	border: none;
+	border-radius: 50%;
+}
+
+.gap-slider-helper:hover #gap-slider {
+	opacity: 1;
+	transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+hr {
+	height: 1px;
+	background-color: var(--color-surface-mixed-400);
+	max-width: 80vw;
+	margin: 20px auto;
+}
+
+.help-area {
+	margin: 50px auto 50px;
+	align-items: start;
+	max-width: 80vw;
+	gap: 35px;
+}
+
+.help-title {
+	text-align: center;
+	color: var(--color-primary-200);
+	margin-bottom: 10px;
+}
+
+.help-content {
+	max-width: 350px;
+	min-width: 150px;
+}
+
+.help-braille-demo {
+	display: inline;
+	letter-spacing: -2px;
+	font-size: 14px;
+}
+
+@media (max-width: 600px) {
+	.help-content {
+		max-width: 375px;
+		min-width: 300px;
+	}
+	
+}
+
+footer {
+	background-color: var(--color-surface-mixed-200);
+	opacity: 0.8;
+	min-height: 50px;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 50px;
+}
+
+.logo-container {
+	background-color: var(--color-surface-mixed-300);
+	padding: 5px 10px;
+	border-radius: 5px;
+	gap: 10px;
+}
+
+.logo {
+	max-width: 20px;
+	max-height: 20px;
 }
