@@ -1,17 +1,26 @@
 import { BRAILLE_SYMBOLS } from "./data.js";
 const PATTERN_CONTAINER = document.getElementById("pattern-container");
-const RESULT_CHAR_CONTAINER = document.getElementById("result-char-container");
+const SYMBOLS_CONTAINER = document.getElementById("symbols-container");
 class Pattern {
-    constructor() {
+    constructor(position = -1) {
         this.patternNode = document.createElement("div");
         this.patternNode.classList.add("pattern");
         this.cells = [];
         this.createCellNodes();
         this.removeNode = this.createRemoveButton();
         this.patternNode.appendChild(this.removeNode);
-        PATTERN_CONTAINER.appendChild(this.patternNode);
-        this.resultCharNode = this.createResultNode();
-        RESULT_CHAR_CONTAINER.appendChild(this.resultCharNode);
+        this.addNode = this.createAddButton();
+        this.patternNode.appendChild(this.addNode);
+        this.symbolNode = this.createSymbolNode();
+        if (position === -1) {
+            PATTERN_CONTAINER.appendChild(this.patternNode);
+            SYMBOLS_CONTAINER.appendChild(this.symbolNode);
+        }
+        else {
+            PATTERN_CONTAINER.insertBefore(this.patternNode, PATTERN_CONTAINER.children[position + 1]);
+            SYMBOLS_CONTAINER.insertBefore(this.symbolNode, SYMBOLS_CONTAINER.children[position + 1]);
+        }
+        this.handleTouchButtons();
     }
     createCellNodes() {
         for (let i = 0; i < 8; i++) {
@@ -26,19 +35,49 @@ class Pattern {
             this.patternNode.appendChild(cell);
         }
     }
-    createResultNode() {
+    createSymbolNode() {
         const resultCharNode = document.createElement("span");
-        resultCharNode.classList.add("result-char");
+        resultCharNode.classList.add("symbol");
         resultCharNode.textContent = "⠀"; // empty braille char
         return resultCharNode;
     }
     createRemoveButton() {
-        const removeNode = document.createElement("button");
-        removeNode.classList.add("remove");
-        removeNode.textContent = "X";
-        removeNode.title = "Remove Pattern";
-        removeNode.onclick = () => this.remove();
-        return removeNode;
+        const removeBtn = document.createElement("button");
+        removeBtn.classList.add("remove-btn", "editor-btn");
+        removeBtn.textContent = "X";
+        removeBtn.title = "Remove pattern";
+        removeBtn.onclick = () => this.remove();
+        return removeBtn;
+    }
+    createAddButton() {
+        const addBtn = document.createElement("button");
+        addBtn.classList.add("add-btn", "editor-btn");
+        addBtn.textContent = "+";
+        addBtn.title = "Add a new pattern";
+        addBtn.onclick = () => createPattern(this.getPosition());
+        return addBtn;
+    }
+    handleTouchButtons() {
+        let holdTimeout;
+        this.patternNode.addEventListener('touchstart', (event) => {
+            // Avoid unwanted side effects
+            event.preventDefault();
+            holdTimeout = setTimeout(() => {
+                this.removeNode.style.opacity = "1.0";
+                this.addNode.style.opacity = "1.0";
+            }, 1000);
+        });
+        // User released the touch
+        this.patternNode.addEventListener('touchend', () => {
+            clearTimeout(holdTimeout);
+            holdTimeout = setTimeout(() => {
+                this.removeNode.style.opacity = "0.0";
+                this.addNode.style.opacity = "0.0";
+            }, 2000);
+        });
+    }
+    getPosition() {
+        return Array.from(PATTERN_CONTAINER.children).indexOf(this.patternNode);
     }
     convertPattern(pattern, symbols) {
         return symbols[parseInt(pattern, 2)];
@@ -52,13 +91,13 @@ class Pattern {
         this.value = this.convertPattern(pattern, BRAILLE_SYMBOLS);
     }
     updateResult() {
-        this.resultCharNode.textContent = this.value;
+        this.symbolNode.textContent = this.value;
     }
     remove() {
         PATTERN_CONTAINER.removeChild(this.patternNode);
-        RESULT_CHAR_CONTAINER.removeChild(this.resultCharNode);
-        if (PATTERN_CONTAINER.children.length === 0) {
-            new Pattern();
+        SYMBOLS_CONTAINER.removeChild(this.symbolNode);
+        if (PATTERN_CONTAINER.children.length < 1) {
+            createPattern();
         }
     }
 }
@@ -75,25 +114,23 @@ function changeColor(button) {
         button.classList.remove("highlight");
     }, 1000);
 }
-function createPattern(button) {
-    new Pattern();
-    changeColor(button);
+function createPattern(position = -1) {
+    new Pattern(position);
 }
 function copyResult(button) {
-    const result = Array.from(RESULT_CHAR_CONTAINER.children)
+    const result = Array.from(SYMBOLS_CONTAINER.children)
         .map((charNode) => charNode.textContent)
         .join("");
     copy(result);
     changeColor(button);
 }
-function resetPatterns(button) {
-    PATTERN_CONTAINER.innerHTML = "";
-    RESULT_CHAR_CONTAINER.innerHTML = "";
-    new Pattern();
-    changeColor(button);
-}
 // TODO: find a way to add to 'window' without explicitly doing so
 window.createPattern = createPattern;
 window.copyResult = copyResult;
-window.resetPatterns = resetPatterns;
-new Pattern();
+createPattern();
+const gapSlider = document.getElementById("gap-slider");
+gapSlider.addEventListener("input", function () {
+    Array.from(SYMBOLS_CONTAINER.children).forEach((symbol) => {
+        symbol.style.marginRight = `${gapSlider.value}px`;
+    });
+});
