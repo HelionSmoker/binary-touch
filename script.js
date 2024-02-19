@@ -1,6 +1,8 @@
 import { BRAILLE_SYMBOLS } from "./data.js";
 const PATTERN_CONTAINER = document.getElementById("pattern-container");
 const SYMBOLS_CONTAINER = document.getElementById("symbols-container");
+
+
 class Pattern {
     constructor(position = -1) {
         this.patternNode = document.createElement("div");
@@ -79,16 +81,51 @@ class Pattern {
     getPosition() {
         return Array.from(PATTERN_CONTAINER.children).indexOf(this.patternNode);
     }
-    convertPattern(pattern, symbols) {
-        return symbols[parseInt(pattern, 2)];
+
+    patternToSymbol(pattern) {
+        /*
+        Converts a binary Braille pattern into its corresponding Unicode symbol.
+    
+        Takes in a string representing the binary pattern of a Braille character.
+        It expects a string of length 8, where each character is either '0' or '1'.
+    
+        Returns the Unicode character corresponding to the Braille pattern.
+        */
+
+        // Define the starting point for Braille patterns in Unicode.
+        const blankBraille = "⠀".charCodeAt(0);
+
+        /*
+        Rearrange the pattern for proper Unicode conversion.
+        Given a pattern like this,          we want to convert it to this:
+        ┌───┰───┐                           ┌───┰───┐
+        │ 1 │ 5 │                           │ 8 │ 5 │
+        │ 2 │ 6 │                           │ 7 │ 4 │
+        │ 3 │ 7 │                           │ 6 │ 3 │
+        │ 4 │ 8 │                           │ 2 │ 1 │
+        └───┴───┘                           └───┴───┘
+        
+        Given how unicode sorted the symbols, the first 3 bits from the left reffer to the
+        first 3 cells; the next 3 bits reffer to cell 5, 6, 7; bit 7 to cell 4; bit 8 to cell 8.
+        */
+       console.log(pattern)
+        // let unicodePattern = `${pattern[7]}${pattern[3]}${pattern[6]}${pattern[5]}${pattern[4]}${pattern[2]}${pattern[1]}${pattern[0]}`
+        let rowPattern =     `${pattern[0]}${pattern[2]}${pattern[4]}${pattern[6]}${pattern[1]}${pattern[3]}${pattern[5]}${pattern[7]}`
+        let unicodePattern = `${rowPattern[7]}${rowPattern[3]}${rowPattern[6]}${rowPattern[5]}${rowPattern[4]}${rowPattern[2]}${rowPattern[1]}${rowPattern[0]}`
+        // let unicodePattern = `${rowPattern[7]}${rowPattern[6]}${rowPattern[4]}${rowPattern[1]}${rowPattern[3]}${rowPattern[5]}${rowPattern[2]}${rowPattern[0]}`
+        console.log(pattern,  'row', rowPattern , 'uni', unicodePattern )
+
+        // Convert the pattern to the corresponding Unicode character.
+        return String.fromCharCode(blankBraille + parseInt(unicodePattern, 2));
     }
+
     updateValue() {
         const pattern = this.cells
             .map((button) => {
-            return button.classList.contains("active") ? "1" : "0";
-        })
+                return button.classList.contains("active") ? "1" : "0";
+            })
             .join("");
-        this.value = this.convertPattern(pattern, BRAILLE_SYMBOLS);
+        this.value = this.patternToSymbol(pattern, BRAILLE_SYMBOLS);
     }
     updateResult() {
         this.symbolNode.textContent = this.value;
@@ -128,9 +165,3 @@ function copyResult(button) {
 window.createPattern = createPattern;
 window.copyResult = copyResult;
 createPattern();
-const gapSlider = document.getElementById("gap-slider");
-gapSlider.addEventListener("input", function () {
-    Array.from(SYMBOLS_CONTAINER.children).forEach((symbol) => {
-        symbol.style.marginRight = `${gapSlider.value}px`;
-    });
-});

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Cells Container</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: start;
+            gap: 10px;
+            width: 80%;
+            min-height: 200px;
+            margin: 20px auto;
+            border: 2px dashed #007bff;
+            padding: 10px;
+        }
+
+        .cell {
+            position: relative;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cell:focus {
+            transform: scale(1.05);
+        }
+
+        .cell:hover .remove-btn {
+            display: block;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 0 5px 0 5px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container" class="container">
+        <!-- Cells will be dynamically added here -->
+    </div>
+
+    <button onclick="addCell()">Add Cell</button>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('container');
+
+    function addCell() {
+        const cellCount = container.children.length + 1;
+        const cell = document.createElement('div');
+        const removeBtn = document.createElement('button');
+        removeBtn.innerHTML = 'x';
+        removeBtn.className = 'remove-btn';
+        removeBtn.addEventListener('click', function() {
+            container.removeChild(cell);
+        });
+
+        cell.setAttribute('draggable', 'true');
+        cell.className = 'cell';
+        cell.textContent = `Cell ${cellCount} `;
+        cell.appendChild(removeBtn);
+
+        cell.addEventListener('dragstart', handleDragStart);
+        cell.addEventListener('dragover', handleDragOver);
+        cell.addEventListener('drop', handleDrop);
+
+        container.appendChild(cell);
+    }
+    window.addCell = addCell;
+
+    let draggedItem = null;
+
+    function handleDragStart(e) {
+        draggedItem = e.target;
+        setTimeout(() => e.target.classList.add('dragging'), 0);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(container, e.clientX);
+        if (afterElement !== draggedItem && afterElement !== draggedItem.nextSibling) {
+            const draggable = container.querySelector('.dragging');
+            if (afterElement == null) {
+                container.appendChild(draggable);
+            } else {
+                container.insertBefore(draggable, afterElement);
+            }
+        }
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        draggedItem.classList.remove('dragging');
+        onDragComplete(); // Callback function after drag and drop
+    }
+
+    function getDragAfterElement(container, x) {
+        const draggableElements = [...container.querySelectorAll('.cell:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function onDragComplete() {
+        console.log('Drag and drop action completed');
+    }
+});
+
+
+    </script>
+</body>
+
+</html>

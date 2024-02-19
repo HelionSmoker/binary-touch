@@ -7,7 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css">
 	<link rel="icon" type="image/x-icon" href="favicon.png">
-	<title>Document</title>
+	<script src="https://kit.fontawesome.com/c3dc7cb2c6.js" crossorigin="anonymous"></script>
+	<title>Binary Touch</title>
 </head>
 
 <body>
@@ -17,12 +18,39 @@
 		<a href="#">Text</a>
 	</nav>
 	<main>
-		<div id="pattern-container"></div>
+		<!-- <div id="pattern-container"></div> -->
+
+		<div id="pattern-container">
+			<div class="pattern"><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="remove-btn editor-btn" title="Remove pattern">X</button><button class="add-btn editor-btn"
+					title="Add a new pattern">+</button>
+			</div>
+			<div class="switch">
+				<i class="fa-solid fa-arrow-right-arrow-left"></i>
+			</div>
+			<div class="pattern"><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="remove-btn editor-btn" title="Remove pattern">X</button><button class="add-btn editor-btn"
+					title="Add a new pattern">+</button></div>
+			<div class="pattern"><button class="cell"></button><button class="cell"></button><button
+					class="cell active"></button><button class="cell active"></button><button
+					class="cell active"></button><button class="cell active"></button><button
+					class="cell"></button><button class="cell"></button><button class="remove-btn editor-btn"
+					title="Remove pattern">X</button><button class="add-btn editor-btn"
+					title="Add a new pattern">+</button></div>
+			<div class="pattern"><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="cell"></button><button class="cell"></button><button class="cell"></button><button
+					class="remove-btn editor-btn" title="Remove pattern">X</button><button class="add-btn editor-btn"
+					title="Add a new pattern">+</button></div>
+		</div>
 
 		<div class="center action-area">
 			<div class="gap-slider-helper">
 				<div id="symbols-container"></div>
-				<input type="range" id="gap-slider" min="-3" max="8" step="1" value="4">
 			</div>
 			<button class="copy-btn" onclick="copyResult(this)" title="Copy all the braille symbols">Copy</button>
 		</div>
@@ -60,12 +88,11 @@
 	</main>
 
 	<footer class="center">
-		<p>Check the project on</p>
-		<a href="https://github.com/HelionSmoker/brat-js" target="_blank" class="center logo-container">
+		<p>Want to learn more? Head over to</p>
+		<a href="https://github.com/HelionSmoker/binary-touch" target="_blank" class="center logo-container">
 			<img src="github-mark-white.png" alt="GitHub Mark" class="logo">GitHub
 		</a>
 	</footer>
-	<i class="fas fa-rainbow"></i>
 	<script type="module" src="script.js"></script>
 </body>
 
